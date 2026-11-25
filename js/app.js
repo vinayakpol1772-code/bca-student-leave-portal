@@ -1023,7 +1023,7 @@ function switchLoginTab(role) {
         emailInput.value = "kulkarni.bca@pccoer.org";
     } else if (role === 'admin') {
         if (modalTitle) modalTitle.innerHTML = `<i class="fa-solid fa-user-gear" style="color: var(--primary);"></i> BCA System Admin Login`;
-        emailInput.value = "pccoer.ravet@gmail.com";
+        emailInput.value = "admin@college.com";
     }
 }
 
@@ -1249,7 +1249,34 @@ async function handleAdminProfileUpdate(e) {
     }
 }
 
+let currentForgotRole = 'admin';
+let facultyResetTarget = null;
+
 function openAdminForgotModal() {
+    const currentRole = document.getElementById('loginRole')?.value || 'admin';
+    currentForgotRole = currentRole;
+    facultyResetTarget = null;
+
+    const titleElem = document.getElementById('forgotModalTitle');
+    const descElem = document.getElementById('forgotModalDesc');
+    const emailInput = document.getElementById('admForgotEmail');
+
+    if (currentRole === 'faculty') {
+        if (titleElem) titleElem.innerText = 'Faculty Counselor Password Reset';
+        if (descElem) descElem.innerText = 'Enter your registered Faculty Email Address (e.g. kulkarni.bca@pccoer.org) to reset your password.';
+        if (emailInput) {
+            emailInput.value = 'kulkarni.bca@pccoer.org';
+            emailInput.placeholder = 'kulkarni.bca@pccoer.org';
+        }
+    } else {
+        if (titleElem) titleElem.innerText = 'Admin Password Reset';
+        if (descElem) descElem.innerText = 'Enter your registered Admin Email Address (admin@college.com) or username (admin).';
+        if (emailInput) {
+            emailInput.value = 'admin@college.com';
+            emailInput.placeholder = 'admin@college.com or admin';
+        }
+    }
+
     closeModal('loginModal');
     document.getElementById('adminForgotStep1').style.display = 'block';
     document.getElementById('adminForgotStep2').style.display = 'none';
@@ -1258,15 +1285,39 @@ function openAdminForgotModal() {
 
 async function handleAdminForgotStep1(e) {
     e.preventDefault();
-    const email = document.getElementById('admForgotEmail').value.trim();
+    const inputVal = document.getElementById('admForgotEmail').value.trim();
+
+    // 1. Check if input belongs to a Faculty member in appData.users
+    const facultyUser = appData.users.find(u => 
+        (u.role === 'faculty') && 
+        (u.email?.toLowerCase() === inputVal.toLowerCase() || 
+         u.name?.toLowerCase() === inputVal.toLowerCase() || 
+         u.prn?.toLowerCase() === inputVal.toLowerCase())
+    );
+
+    if (facultyUser) {
+        facultyResetTarget = facultyUser;
+        const mockToken = `FAC-${Math.floor(100000 + Math.random() * 900000)}`;
+        facultyUser._tempResetToken = mockToken;
+        saveState();
+
+        document.getElementById('adminForgotStep1').style.display = 'none';
+        document.getElementById('adminForgotStep2').style.display = 'block';
+        document.getElementById('admForgotToken').value = mockToken;
+        showToast(`Reset token issued for ${facultyUser.name}! Enter new password below.`, "success");
+        return;
+    }
+
+    // 2. Otherwise handle Admin via backend server API
     try {
         const res = await fetch('/api/admin/forgot-password', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
+            body: JSON.stringify({ email: inputVal })
         });
         const data = await res.json();
         if (res.ok && data.success) {
+            facultyResetTarget = null;
             document.getElementById('adminForgotStep1').style.display = 'none';
             document.getElementById('adminForgotStep2').style.display = 'block';
             if (data.reset_token) {
@@ -1274,10 +1325,10 @@ async function handleAdminForgotStep1(e) {
             }
             showToast("Reset token issued! Enter new password below.", "info");
         } else {
-            showToast(data.message || "Email lookup failed!", "danger");
+            showToast(data.message || "Account lookup failed! Please check your email or username.", "danger");
         }
     } catch (err) {
-        showToast("Server communication error!", "danger");
+        showToast("Server communication error! Make sure server.py is running.", "danger");
     }
 }
 
@@ -1286,6 +1337,26 @@ async function handleAdminForgotStep2(e) {
     const reset_token = document.getElementById('admForgotToken').value.trim();
     const new_password = document.getElementById('admForgotNewPassword').value;
 
+    if (!new_password || new_password.length < 4) {
+        showToast("Password must be at least 4 characters long!", "warning");
+        return;
+    }
+
+    // 1. Handle Faculty password reset
+    if (facultyResetTarget && facultyResetTarget._tempResetToken === reset_token) {
+        facultyResetTarget.password = new_password;
+        delete facultyResetTarget._tempResetToken;
+        saveState();
+
+        closeModal('adminForgotModal');
+        document.getElementById('adminForgotStep1').reset();
+        document.getElementById('adminForgotStep2').reset();
+        showToast(`Faculty password reset successfully! You can now log in.`, "success");
+        openLoginModal('faculty');
+        return;
+    }
+
+    // 2. Handle Admin password reset via backend API
     try {
         const res = await fetch('/api/admin/reset-password', {
             method: 'POST',

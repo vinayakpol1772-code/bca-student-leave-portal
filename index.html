@@ -1171,22 +1171,22 @@
         </div>
     </div>
 
-    <!-- ADMIN FORGOT PASSWORD MODAL -->
+    <!-- FORGOT PASSWORD MODAL (FACULTY & ADMIN) -->
     <div class="modal-overlay" id="adminForgotModal">
         <div class="modal-container">
             <div class="modal-header">
-                <h3><i class="fa-solid fa-key" style="color: var(--primary);"></i> Admin Password Reset</h3>
+                <h3><i class="fa-solid fa-key" style="color: var(--primary);"></i> <span id="forgotModalTitle">Password Reset</span></h3>
                 <button class="icon-btn" onclick="closeModal('adminForgotModal')"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body">
                 <!-- Step 1: Request Reset Token -->
                 <form id="adminForgotStep1" onsubmit="handleAdminForgotStep1(event)">
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
-                        Enter your registered Admin Email Address to generate a secure password reset token.
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;" id="forgotModalDesc">
+                        Enter your registered Official Email Address or Username to generate a secure reset token.
                     </p>
                     <div class="form-group">
-                        <label class="form-label">Admin Email Address</label>
-                        <input type="email" class="form-control" id="admForgotEmail" placeholder="admin@college.com" required>
+                        <label class="form-label" id="forgotEmailLabel">Registered Email Address / Username</label>
+                        <input type="text" class="form-control" id="admForgotEmail" placeholder="e.g. admin@college.com or kulkarni.bca@pccoer.org" required>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width: 100%;">Generate Reset Token</button>
                 </form>
@@ -1198,13 +1198,13 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Reset Token</label>
-                        <input type="text" class="form-control" id="admForgotToken" placeholder="Paste 32-character token" required>
+                        <input type="text" class="form-control" id="admForgotToken" placeholder="Paste reset token" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">New Password</label>
                         <input type="password" class="form-control" id="admForgotNewPassword" placeholder="••••••••" required>
                     </div>
-                    <button type="submit" class="btn btn-success" style="width: 100%;">Reset Admin Password</button>
+                    <button type="submit" class="btn btn-success" style="width: 100%;">Set New Password</button>
                 </form>
             </div>
         </div>

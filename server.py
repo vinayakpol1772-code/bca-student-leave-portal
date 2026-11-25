@@ -8,7 +8,8 @@ import os
 import urllib.parse
 from datetime import datetime, timedelta
 
-PORT = 8000
+PORT = int(os.environ.get("PORT", 8000))
+HOST = os.environ.get("HOST", "0.0.0.0")
 DB_FILE = "bca_portal.db"
 
 # In-memory session cache: token -> {admin_id, username, email, expires_at}
@@ -145,7 +146,12 @@ class BCAAuthHandler(http.server.SimpleHTTPRequestHandler):
 
             conn = sqlite3.connect(DB_FILE)
             cursor = conn.cursor()
-            cursor.execute('SELECT id, username, email, password_hash FROM admins WHERE username = ? OR email = ?', (username_or_email, username_or_email))
+            cursor.execute('''
+                SELECT id, username, email, password_hash FROM admins 
+                WHERE LOWER(username) = LOWER(?) 
+                   OR LOWER(email) = LOWER(?) 
+                   OR (email = 'admin@college.com' AND LOWER(?) = 'pccoer.ravet@gmail.com')
+            ''', (username_or_email, username_or_email, username_or_email))
             admin = cursor.fetchone()
             conn.close()
 
@@ -247,7 +253,12 @@ class BCAAuthHandler(http.server.SimpleHTTPRequestHandler):
 
             conn = sqlite3.connect(DB_FILE)
             cursor = conn.cursor()
-            cursor.execute('SELECT id, username FROM admins WHERE email = ?', (email,))
+            cursor.execute('''
+                SELECT id, username FROM admins 
+                WHERE LOWER(email) = LOWER(?) 
+                   OR LOWER(username) = LOWER(?) 
+                   OR (email = 'admin@college.com' AND LOWER(?) = 'pccoer.ravet@gmail.com')
+            ''', (email, email, email))
             admin = cursor.fetchone()
 
             if admin:
@@ -298,8 +309,9 @@ class BCAAuthHandler(http.server.SimpleHTTPRequestHandler):
 if __name__ == "__main__":
     init_db()
     socketserver.TCPServer.allow_reuse_address = True
-    with socketserver.TCPServer(("127.0.0.1", PORT), BCAAuthHandler) as httpd:
-        print(f" [SERVER STARTED] BCA Leave System running at http://127.0.0.1:{PORT}")
+    with socketserver.TCPServer((HOST, PORT), BCAAuthHandler) as httpd:
+        display_host = "127.0.0.1" if HOST == "0.0.0.0" else HOST
+        print(f" [SERVER STARTED] BCA Leave System running at http://{display_host}:{PORT}")
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
