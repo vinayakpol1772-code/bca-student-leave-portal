@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCA Student Leave Management System | PCCOER Ravet</title>
+    <meta name="description" content="Official BCA Department Student Leave Management Portal - Pimpri Chinchwad College of Engineering & Research (PCCOER), Ravet, Pune.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+
+
+    <!-- 3. PCCOER COLLEGE BRANDING HEADER -->
+    <header class="pccoer-header-banner">
+        <div class="container pccoer-header-grid">
+            <div class="pccoer-header-logo">
+                <img src="assets/pccoer_logo.jpg" alt="PCCOER Logo" id="pccoerLogoLeft" onerror="this.src='https://images.unsplash.com/photo-1592280771190-3e2e4d571952?auto=format&fit=crop&w=120&q=80'">
+            </div>
+            <div class="pccoer-title-box">
+                <h3>Pimpri Chinchwad Education Trust's</h3>
+                <h1>PIMPRI CHINCHWAD COLLEGE OF ENGINEERING & RESEARCH</h1>
+                <div class="tagline-1">An Autonomous Institute | NBA Accredited (4 UG Programs) | NAAC A++ Accredited | An ISO 21001:2018 Certified</div>
+                <div class="tagline-2">"Best College Award (Professional Urban)" by SPPU, Pune</div>
+                <div class="tagline-3">(Approved by Govt. of Maharashtra, Affiliated to SPPU, Approved by AICTE, DTE CODE – 6822)</div>
+                <div><span class="bca-dept-badge"><i class="fa-solid fa-graduation-cap"></i> DEPARTMENT OF COMPUTER APPLICATIONS (BCA)</span></div>
+            </div>
+            <div class="pccoer-header-logo">
+                <img src="assets/pccoer_logo.jpg" alt="PCET Emblem" id="pcetLogoRight" onerror="this.src='https://images.unsplash.com/photo-1592280771190-3e2e4d571952?auto=format&fit=crop&w=120&q=80'">
+            </div>
+        </div>
+    </header>
+
+    <!-- 4. PRIMARY NAVIGATION NAVBAR -->
+    <nav class="navbar">
+        <div class="container navbar-inner">
+            <ul class="nav-links" id="publicNavLinks">
+                <li><a href="#hero" class="nav-link active" onclick="switchRole('landing')">Home</a></li>
+                <li><a href="#about" class="nav-link">About Portal</a></li>
+                <li><a href="#bca-dept" class="nav-link">BCA Department</a></li>
+                <li><a href="#workflow" class="nav-link">Leave Workflow</a></li>
+                <li><a href="#faq" class="nav-link">FAQ</a></li>
+                <li><a href="#contact" class="nav-link">Contact Desk</a></li>
+            </ul>
+
+            <div class="flex items-center gap-3">
+                <!-- Notifications Button -->
+                <button class="icon-btn" id="notifToggleBtn" onclick="toggleNotificationsDrawer()" title="Notifications">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="badge-dot" id="notifDot"></span>
+                </button>
+
+                <!-- Dark Mode Toggle -->
+                <button class="icon-btn theme-toggle" onclick="toggleDarkMode()" title="Toggle Dark/Light Mode">
+                    <i class="fa-regular fa-moon" id="themeIcon"></i>
+                </button>
+
+                <!-- Action Buttons -->
+                <div id="guestNavAction" class="flex gap-2">
+                    <button class="btn btn-primary btn-sm" onclick="openApplyLeaveModal()">
+                        <i class="fa-solid fa-paper-plane"></i> Apply for Leave
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="openLoginModal('faculty')">
+                        <i class="fa-solid fa-chalkboard-user"></i> Faculty Login
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="openLoginModal('admin')">
+                        <i class="fa-solid fa-user-gear"></i> Admin Login
+                    </button>
+                </div>
+
+                <!-- Logged In User Pill & Logout -->
+                <div id="userNavAction" style="display: none;" class="flex items-center gap-2">
+                    <div class="user-menu-btn" onclick="openProfileOrLogoutModal()">
+                        <div class="user-avatar" id="navUserAvatar">RS</div>
+                        <div style="text-align: left; line-height: 1.2;">
+                            <div style="font-size: 0.82rem; font-weight: 700;" id="navUserName">Rahul Sharma</div>
+                            <div style="font-size: 0.68rem; color: var(--text-muted);" id="navUserRole">Student</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-danger btn-sm" onclick="logoutUser()" title="Log out of session">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN VIEWS CONTAINER -->
+    <main id="mainContainer">
+
+        <!-- ==========================================
+             1. PUBLIC HOME LANDING PAGE VIEW
+             ========================================== -->
+        <section id="view-landing" class="view-section active">
+            
+            <!-- Hero Banner -->
+            <div class="hero" id="hero">
+                <div class="container">
+                    <div style="max-width: 750px;">
+                        <div class="badge badge-approved" style="margin-bottom: 1rem; background: var(--primary-light); color: var(--primary);">
+                            <i class="fa-solid fa-award"></i> PCCOER Ravet &bull; Academic Year 2026-2027
+                        </div>
+                        <h1 class="hero-title">Automated Leave Management for <span>BCA Department</span></h1>
+                        <p class="hero-desc">
+                            A centralized digital leave portal for Bachelor of Computer Applications (FY BCA, SY BCA, TY BCA) students, faculty class counselors, and Head of Department at PCCOER.
+                        </p>
+                        <div class="flex gap-3 flex-wrap">
+                            <button class="btn btn-primary btn-lg" onclick="openApplyLeaveModal()">
+                                <i class="fa-solid fa-paper-plane"></i> Apply for Leave
+                            </button>
+                            <button class="btn btn-secondary btn-lg" onclick="openLoginModal('faculty')">
+                                <i class="fa-solid fa-chalkboard-user"></i> Faculty Login
+                            </button>
+                            <button class="btn btn-secondary btn-lg" onclick="openLoginModal('admin')">
+                                <i class="fa-solid fa-user-gear"></i> Admin Login
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Section -->
+            <div class="container" id="about" style="padding: 3.5rem 1.5rem;">
+                <div class="section-header">
+                    <h2 class="section-title">Streamlined Academic Governance</h2>
+                    <p class="section-subtitle">Elimination of paper applications, real-time approval tracking, and transparent medical verification for BCA students.</p>
+                </div>
+
+                <div class="grid grid-cols-3 gap-6">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-file-medical"></i></div>
+                        <h3>Mandatory Medical Certificate Upload</h3>
+                        <p>Upload digital proof (PDF/JPG/PNG max 5MB). The system enforces validation so medical requests cannot be submitted without attached documentation.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-sitemap"></i></div>
+                        <h3>Two-Tier Review Workflow</h3>
+                        <p>Hierarchical approval pipeline: Student Submission &rarr; BCA Class Counselor Review &rarr; BCA HOD Final Sign-off with instant status notifications.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                        <h3>Official Approval Letters</h3>
+                        <p>Instantly generate and download official PCCOER BCA Leave Approval Letters with reference IDs, signature lines, and printable letterhead styling.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BCA Department Info -->
+            <div class="container" id="bca-dept" style="padding: 2rem 1.5rem 3.5rem 1.5rem;">
+                <div class="card-panel" style="background: linear-gradient(135deg, var(--bg-card) 0%, var(--primary-light) 100%);">
+                    <div class="section-header" style="margin-bottom: 2rem;">
+                        <h2 class="section-title">BCA Department Academic Structure</h2>
+                        <p class="section-subtitle">Supporting full academic registers for First, Second, and Third Year Bachelor of Computer Applications.</p>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-6 text-center">
+                        <div style="background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                            <div style="font-size: 1.75rem; font-weight: 800; color: var(--primary);">FY BCA</div>
+                            <div style="font-weight: 600; margin: 0.25rem 0;">First Year BCA</div>
+                            <p style="font-size: 0.82rem; color: var(--text-muted);">Semesters 1 & 2 &bull; Divisions A, B, C</p>
+                        </div>
+                        <div style="background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                            <div style="font-size: 1.75rem; font-weight: 800; color: var(--primary);">SY BCA</div>
+                            <div style="font-weight: 600; margin: 0.25rem 0;">Second Year BCA</div>
+                            <p style="font-size: 0.82rem; color: var(--text-muted);">Semesters 3 & 4 &bull; Divisions A, B, C</p>
+                        </div>
+                        <div style="background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                            <div style="font-size: 1.75rem; font-weight: 800; color: var(--primary);">TY BCA</div>
+                            <div style="font-weight: 600; margin: 0.25rem 0;">Third Year BCA</div>
+                            <p style="font-size: 0.82rem; color: var(--text-muted);">Semesters 5 & 6 &bull; Divisions A, B, C</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workflow Visual -->
+            <div class="container" id="workflow" style="padding: 2rem 1.5rem 3.5rem 1.5rem;">
+                <div class="section-header">
+                    <h2 class="section-title">Leave Approval Workflow</h2>
+                    <p class="section-subtitle">Follow your application status at each verification step.</p>
+                </div>
+                <div class="grid grid-cols-3 gap-6 text-center">
+                    <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: var(--radius-md);">
+                        <div style="width: 36px; height: 36px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; margin: 0 auto 0.75rem auto;">1</div>
+                        <h4>Student Submission</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Fill leave form, select type, auto-calculate dates, attach medical proof if required.</p>
+                    </div>
+                    <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: var(--radius-md);">
+                        <div style="width: 36px; height: 36px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; margin: 0 auto 0.75rem auto;">2</div>
+                        <h4>Faculty Review & Approval</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">BCA Counselor verifies attendance, medical certificate authenticity, and grants approval.</p>
+                    </div>
+                    <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: var(--radius-md);">
+                        <div style="width: 36px; height: 36px; background: var(--success); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; margin: 0 auto 0.75rem auto;">3</div>
+                        <h4>Notification & Letter Issued</h4>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Student receives instant SMS/Email alert & downloads official Leave Approval Letter.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="container" id="faq" style="padding: 2rem 1.5rem 3.5rem 1.5rem;">
+                <div class="section-header">
+                    <h2 class="section-title">Frequently Asked Questions (FAQ)</h2>
+                    <p class="section-subtitle">Common queries regarding BCA Department leave guidelines.</p>
+                </div>
+
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <div class="faq-item active" onclick="toggleFaq(this)">
+                        <div class="faq-question">
+                            <span>Is uploading a Medical Certificate mandatory for Medical Leave?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Yes. The system enforces medical certificate verification. If you select "Medical Leave", you must upload a doctor's certificate in PDF, JPG, JPEG, or PNG format (Max 5MB). Applications without an attached document cannot be submitted.
+                        </div>
+                    </div>
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-question">
+                            <span>How long does it take for leave approval?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Normally, requests are reviewed by the Class Counselor within 12-24 hours and forwarded to the BCA HOD for final approval.
+                        </div>
+                    </div>
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-question">
+                            <span>Where can I download my Leave Approval Letter?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Once your application status changes to "Approved", a "Download Letter" button will appear in your Student Dashboard under Leave History.
+                        </div>
+                    </div>
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <div class="faq-question">
+                            <span>Can I withdraw or cancel a pending leave request?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </div>
+                        <div class="faq-answer">
+                            Yes. As long as your application is in "Pending Faculty" or "Pending HOD" state, you can click the withdrawal icon in your history table to cancel it.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Section -->
+            <div class="container" id="contact" style="padding: 2rem 1.5rem 3.5rem 1.5rem;">
+                <div class="card-panel">
+                    <div class="grid grid-cols-2 gap-6 items-center">
+                        <div>
+                            <h2 style="font-size: 1.75rem; margin-bottom: 0.75rem;">BCA Department Helpdesk</h2>
+                            <p style="color: var(--text-muted); margin-bottom: 1.25rem; font-size: 0.9rem;">
+                                Contact the BCA Department Office or Academic Counselor for portal login support.
+                            </p>
+                            <div class="flex flex-col gap-2" style="font-size: 0.88rem;">
+                                <div><i class="fa-solid fa-location-dot" style="color: var(--primary); margin-right: 0.5rem;"></i> PCCOER Campus, Sector 26, Pradhikaran, Ravet, Pune, Maharashtra 412101</div>
+                                <div><i class="fa-solid fa-phone" style="color: var(--primary); margin-right: 0.5rem;"></i> <strong>BCA Helpline:</strong> 8108181099 | 9923413003</div>
+                                <div><i class="fa-solid fa-envelope" style="color: var(--primary); margin-right: 0.5rem;"></i> pccoer.ravet@gmail.com</div>
+                            </div>
+                        </div>
+                        <div style="background: var(--bg-main); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                            <h4 style="margin-bottom: 0.75rem;">Send Inquiry to BCA Office</h4>
+                            <form onsubmit="event.preventDefault(); showToast('Inquiry sent to BCA Department Head!', 'success');">
+                                <div class="form-group">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" placeholder="Enter student/parent name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">PRN / Roll Number</label>
+                                    <input type="text" class="form-control" placeholder="PRN or Roll No" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Message</label>
+                                    <textarea class="form-control" rows="2" placeholder="Describe query..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Inquiry</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ==========================================
+             2. STUDENT DASHBOARD VIEW
+             ========================================== -->
+        <section id="view-student" class="view-section">
+            <div class="container">
+                
+                <div class="card-panel" style="margin-bottom: 1.25rem;">
+                    <div class="flex items-center justify-between flex-wrap gap-3">
+                        <div class="flex items-center gap-3">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Student" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" id="studentProfileImg">
+                            <div>
+                                <h2 id="studentNameDisplay" style="font-size: 1.35rem;">Rahul Sharma</h2>
+                                <p style="color: var(--text-muted); font-size: 0.85rem;">
+                                    Department of BCA &bull; <span id="studentDeptYear">TY BCA (Sem 6) &bull; Div A</span>
+                                </p>
+                                <div class="flex gap-3" style="margin-top: 0.25rem; font-size: 0.78rem; color: var(--text-muted);">
+                                    <span><strong>Roll No:</strong> <span id="studentRollDisplay">305</span></span>
+                                    <span><strong>PRN:</strong> <span id="studentPrnDisplay">1032210452</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 flex-wrap">
+                            <button class="btn btn-primary" onclick="openApplyLeaveModal()">
+                                <i class="fa-solid fa-plus"></i> Apply for Leave
+                            </button>
+                            <button class="btn btn-secondary" onclick="openEditProfileModal()">
+                                <i class="fa-solid fa-user-pen"></i> Edit Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-info">
+                            <h4>Total Leaves</h4>
+                            <div class="value" id="stTotalLeaves">0</div>
+                        </div>
+                        <div class="stat-card-icon icon-blue"><i class="fa-solid fa-paper-plane"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-info">
+                            <h4>Approved</h4>
+                            <div class="value" id="stApprovedLeaves">0</div>
+                        </div>
+                        <div class="stat-card-icon icon-green"><i class="fa-solid fa-circle-check"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-info">
+                            <h4>Pending Approval</h4>
+                            <div class="value" id="stPendingLeaves">0</div>
+                        </div>
+                        <div class="stat-card-icon icon-amber"><i class="fa-solid fa-clock"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-info">
+                            <h4>Medical Leaves</h4>
+                            <div class="value" id="stMedicalLeaves">0</div>
+                        </div>
+                        <div class="stat-card-icon icon-purple"><i class="fa-solid fa-briefcase-medical"></i></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-6" style="margin-bottom: 1.5rem;">
+                    <div class="card-panel" style="grid-column: span 2; margin-bottom: 0;">
+                        <div class="panel-header">
+                            <h3>Monthly Leave Trend</h3>
+                        </div>
+                        <div class="chart-card">
+                            <canvas id="studentMonthlyChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="card-panel" style="margin-bottom: 0;">
+                        <div class="panel-header">
+                            <h3>Leave Types</h3>
+                        </div>
+                        <div class="chart-card">
+                            <canvas id="studentTypeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-panel">
+                    <div class="panel-header">
+                        <h3>BCA Leave History & Tracker</h3>
+                        <div class="filter-bar">
+                            <input type="text" class="form-control" id="studentSearchInput" placeholder="Search reason or ID..." onkeyup="filterStudentTable()">
+                            <select class="form-control" id="studentStatusFilter" onchange="filterStudentTable()">
+                                <option value="ALL">All Statuses</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Pending Faculty">Pending Faculty</option>
+                                <option value="Pending HOD">Pending HOD</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Leave ID</th>
+                                    <th>Leave Type</th>
+                                    <th>Duration</th>
+                                    <th>Days</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentLeaveTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==========================================
+             3. FACULTY DASHBOARD VIEW
+             ========================================== -->
+        <section id="view-faculty" class="view-section">
+            <div class="container">
+                
+                <div class="card-panel" style="margin-bottom: 1.25rem;">
+                    <div class="flex items-center justify-between flex-wrap gap-3">
+                        <div>
+                            <span class="badge badge-approved" style="margin-bottom: 0.3rem;">BCA Class Counselor</span>
+                            <h2 id="facultyNameDisplay">Prof. A. V. Kulkarni</h2>
+                            <p style="color: var(--text-muted); font-size: 0.85rem;">
+                                Department of Computer Applications (BCA) &bull; PCCOER Ravet
+                            </p>
+                        </div>
+                        <div class="flex gap-2 flex-wrap">
+                            <button class="btn btn-secondary" onclick="exportFacultyReport()">
+                                <i class="fa-solid fa-file-excel"></i> Export BCA List
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-info">
+                            <h4>Pending Review</h4>
+                            <div class="value" id="fcPendingReview">0</div>
+                        </div>
+                        <div class="stat-card-icon icon-amber"><i class="fa-solid fa-hourglass-half"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-info">
+                            <h4>Faculty Approved</h4>
+                            <div class="value" id="fcApprovedCount">0</div>
+                        </div>
+                        <div class="stat-card-icon icon-green"><i class="fa-solid fa-check-double"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-info">
+                            <h4>Rejected / Returned</h4>
+                            <div class="value" id="fcRejectedCount">0</div>
+                        </div>
+                        <div class="stat-card-icon icon-red"><i class="fa-solid fa-xmark"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-info">
+                            <h4>Medical Certificate Proofs</h4>
+                            <div class="value" id="fcMedicalCount">0</div>
+                        </div>
+                        <div class="stat-card-icon icon-purple"><i class="fa-solid fa-file-medical"></i></div>
+                    </div>
+                </div>
+
+                <div class="card-panel">
+                    <div class="panel-header">
+                        <h3>BCA Student Leave Applications</h3>
+                        <div class="filter-bar">
+                            <select class="form-control" id="fcYearFilter" onchange="renderFacultyDashboard()">
+                                <option value="ALL">All BCA Years</option>
+                                <option value="FY BCA">FY BCA</option>
+                                <option value="SY BCA">SY BCA</option>
+                                <option value="TY BCA">TY BCA</option>
+                            </select>
+                            <select class="form-control" id="fcDivFilter" onchange="renderFacultyDashboard()">
+                                <option value="ALL">All Divisions</option>
+                                <option value="A">Div A</option>
+                                <option value="B">Div B</option>
+                                <option value="C">Div C</option>
+                            </select>
+                            <input type="text" class="form-control" id="fcSearchInput" placeholder="Search Roll, PRN, Name..." onkeyup="renderFacultyDashboard()">
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Student Details</th>
+                                    <th>Year / Div</th>
+                                    <th>Leave Type</th>
+                                    <th>Dates</th>
+                                    <th>Reason / Description</th>
+                                    <th>Medical Doc</th>
+                                    <th>Status</th>
+                                    <th>Counselor Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="facultyTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==========================================
+             4. HOD DASHBOARD VIEW
+             ========================================== -->
+        <section id="view-hod" class="view-section">
+            <div class="container">
+                
+                <div class="card-panel" style="margin-bottom: 1.25rem; background: linear-gradient(90deg, var(--bg-card) 0%, var(--primary-light) 100%);">
+                    <div class="flex items-center justify-between flex-wrap gap-3">
+                        <div>
+                            <span class="badge badge-approved" style="background: var(--primary); color: white;">Head of Department (HOD)</span>
+                            <h2 id="hodNameDisplay">Dr. S. R. Patil</h2>
+                            <p style="color: var(--text-muted); font-size: 0.85rem;">
+                                Department of Computer Applications (BCA) &bull; PCCOER Ravet
+                            </p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="btn btn-primary" onclick="exportHODReport('pdf')">
+                                <i class="fa-solid fa-file-pdf"></i> Download BCA Report PDF
+                            </button>
+                            <button class="btn btn-secondary" onclick="exportHODReport('excel')">
+                                <i class="fa-solid fa-file-csv"></i> Export Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-info">
+                            <h4>BCA Students</h4>
+                            <div class="value" id="hdTotalStudents">180</div>
+                        </div>
+                        <div class="stat-card-icon icon-blue"><i class="fa-solid fa-users"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-info">
+                            <h4>Pending Sign-off</h4>
+                            <div class="value" id="hdPendingCount">0</div>
+                        </div>
+                        <div class="stat-card-icon icon-amber"><i class="fa-solid fa-signature"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-info">
+                            <h4>Total Approved</h4>
+                            <div class="value" id="hdApprovedCount">0</div>
+                        </div>
+                        <div class="stat-card-icon icon-green"><i class="fa-solid fa-circle-check"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-info">
+                            <h4>Rejected</h4>
+                            <div class="value" id="hdRejectedCount">0</div>
+                        </div>
+                        <div class="stat-card-icon icon-red"><i class="fa-solid fa-circle-xmark"></i></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6" style="margin-bottom: 1.5rem;">
+                    <div class="card-panel" style="margin-bottom: 0;">
+                        <div class="panel-header">
+                            <h3>BCA Year-Wise Distribution</h3>
+                        </div>
+                        <div class="chart-card">
+                            <canvas id="hodYearChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="card-panel" style="margin-bottom: 0;">
+                        <div class="panel-header">
+                            <h3>Leave Reasons Breakdown</h3>
+                        </div>
+                        <div class="chart-card">
+                            <canvas id="hodReasonChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-panel">
+                    <div class="panel-header">
+                        <h3>BCA Department Final Approval Queue</h3>
+                        <div class="filter-bar">
+                            <input type="text" class="form-control" id="hodSearchInput" placeholder="Search student or roll..." onkeyup="renderHODDashboard()">
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Student Info</th>
+                                    <th>Leave Type</th>
+                                    <th>Duration</th>
+                                    <th>Reason</th>
+                                    <th>Faculty Decision</th>
+                                    <th>Medical Doc</th>
+                                    <th>HOD Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hodTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==========================================
+             5. ADMIN DASHBOARD VIEW
+             ========================================== -->
+        <section id="view-admin" class="view-section">
+            <div class="container">
+                
+                <div class="card-panel" style="margin-bottom: 1.25rem;">
+                    <div class="flex items-center justify-between flex-wrap gap-3">
+                        <div>
+                            <span class="badge badge-approved" style="background: var(--secondary); color: white;">System Administrator</span>
+                            <h2>BCA System Admin Control Panel</h2>
+                            <p style="color: var(--text-muted); font-size: 0.85rem;">
+                                Manage BCA Students, Faculty, HOD accounts, system notifications, and JSON backups.
+                            </p>
+                        </div>
+                        <div class="flex gap-2 flex-wrap">
+                            <button class="btn btn-primary" onclick="openAddUserModal()">
+                                <i class="fa-solid fa-user-plus"></i> Add Faculty Counselor
+                            </button>
+                            <button class="btn btn-secondary" onclick="exportFullSystemData()">
+                                <i class="fa-solid fa-download"></i> Backup JSON
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-info">
+                            <h4>Registered Students</h4>
+                            <div class="value" id="adStudentCount">0</div>
+                        </div>
+                        <div class="stat-card-icon icon-blue"><i class="fa-solid fa-user-graduate"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-info">
+                            <h4>Faculty Counselors</h4>
+                            <div class="value" id="adFacultyCount">0</div>
+                        </div>
+                        <div class="stat-card-icon icon-green"><i class="fa-solid fa-chalkboard-user"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-info">
+                            <h4>BCA HOD</h4>
+                            <div class="value" id="adHodCount">1</div>
+                        </div>
+                        <div class="stat-card-icon icon-amber"><i class="fa-solid fa-user-tie"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-info">
+                            <h4>BCA Department</h4>
+                            <div class="value" id="adDeptCount">1</div>
+                        </div>
+                        <div class="stat-card-icon icon-purple"><i class="fa-solid fa-building-columns"></i></div>
+                    </div>
+                </div>
+
+                <div class="card-panel">
+                    <div class="panel-header">
+                        <h3>BCA User Directory</h3>
+                        <div class="filter-bar">
+                            <select class="form-control" id="adminRoleFilter" onchange="renderAdminDashboard()">
+                                <option value="ALL">All Roles</option>
+                                <option value="student">Students</option>
+                                <option value="faculty">Faculty</option>
+                                <option value="hod">HOD</option>
+                            </select>
+                            <input type="text" class="form-control" id="adminSearchInput" placeholder="Search name or email..." onkeyup="renderAdminDashboard()">
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID / PRN</th>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                    <th>Year / Div</th>
+                                    <th>Email / Mobile</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminUserTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==========================================
+         MODAL WINDOWS & OVERLAYS
+         ========================================== -->
+
+    <!-- LOGIN MODAL -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-lock" style="color: var(--primary);"></i> BCA Portal Login</h3>
+                <button class="icon-btn" onclick="closeModal('loginModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="role-pills" style="margin-bottom: 1.25rem; justify-content: center;">
+                    <button class="role-pill active" id="tab-login-student" onclick="switchLoginTab('student')">Student</button>
+                    <button class="role-pill" id="tab-login-faculty" onclick="switchLoginTab('faculty')">Faculty</button>
+                    <button class="role-pill" id="tab-login-admin" onclick="switchLoginTab('admin')">Admin</button>
+                </div>
+
+                <form id="loginForm" onsubmit="handleLoginFormSubmit(event)">
+                    <input type="hidden" id="loginRole" value="student">
+                    <div class="form-group">
+                        <label class="form-label">Email Address / PRN</label>
+                        <input type="email" class="form-control" id="loginEmail" placeholder="e.g. rahul.bca@pccoer.org" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" id="loginPassword" placeholder="••••••••" required>
+                    </div>
+                    <div class="flex justify-between items-center" style="margin-bottom: 1rem; font-size: 0.8rem;">
+                        <label><input type="checkbox" checked> Remember me</label>
+                        <a href="#" onclick="openAdminForgotModal()">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Log In</button>
+                </form>
+            </div>
+            <div class="modal-footer" style="flex-direction: column; gap: 0.5rem; text-align: center;">
+                <span style="font-size: 0.82rem; color: var(--text-muted);">
+                    Don't have a BCA account? <a href="#" onclick="openRegisterModal()">Register Here</a>
+                </span>
+                <div style="font-size: 0.75rem; color: var(--text-muted); border-top: 1px solid var(--border-color); padding-top: 0.5rem; width: 100%;">
+                    Staff & Admin Access: 
+                    <a href="#" onclick="openLoginModal('faculty')">Faculty Login</a> &bull; 
+                    <a href="#" onclick="openLoginModal('admin')">Admin Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTRATION MODAL -->
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal-container modal-lg">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-user-plus" style="color: var(--primary);"></i> BCA Student Registration</h3>
+                <button class="icon-btn" onclick="closeModal('registerModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="registerForm" onsubmit="handleRegistrationSubmit(event)">
+                <input type="hidden" id="regRole" value="student">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" class="form-control" id="regName" placeholder="e.g. Priyanshu Patil" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address *</label>
+                            <input type="email" class="form-control" id="regEmail" placeholder="student@pccoer.org" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">PRN / Employee ID *</label>
+                            <input type="text" class="form-control" id="regPrn" placeholder="10322XXXXX" required>
+                        </div>
+
+                        <!-- Student specific fields -->
+                        <div class="form-group reg-student-field">
+                            <label class="form-label">BCA Year *</label>
+                            <select class="form-control" id="regYear">
+                                <option value="FY BCA">FY BCA</option>
+                                <option value="SY BCA">SY BCA</option>
+                                <option value="TY BCA">TY BCA</option>
+                            </select>
+                        </div>
+                        <div class="form-group reg-student-field">
+                            <label class="form-label">Division & Semester *</label>
+                            <div class="flex gap-2">
+                                <select class="form-control" id="regDiv">
+                                    <option value="A">Div A</option>
+                                    <option value="B">Div B</option>
+                                    <option value="C">Div C</option>
+                                </select>
+                                <select class="form-control" id="regSem">
+                                    <option value="Sem 1">Sem 1</option>
+                                    <option value="Sem 2">Sem 2</option>
+                                    <option value="Sem 3">Sem 3</option>
+                                    <option value="Sem 4">Sem 4</option>
+                                    <option value="Sem 5">Sem 5</option>
+                                    <option value="Sem 6">Sem 6</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group reg-student-field">
+                            <label class="form-label">Roll Number *</label>
+                            <input type="text" class="form-control" id="regRoll" placeholder="e.g. 108">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Mobile Number *</label>
+                            <input type="tel" class="form-control" id="regMobile" placeholder="10-digit mobile" pattern="[0-9]{10}" required>
+                        </div>
+                        <div class="form-group reg-student-field">
+                            <label class="form-label">Parent Contact Number *</label>
+                            <input type="tel" class="form-control" id="regParentMobile" placeholder="10-digit parent mobile" pattern="[0-9]{10}">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Password *</label>
+                            <input type="password" class="form-control" id="regPassword" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirm Password *</label>
+                            <input type="password" class="form-control" id="regConfirmPassword" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('registerModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-user-plus"></i> Complete Registration</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- STUDENT LEAVE APPLICATION MODAL -->
+    <div class="modal-overlay" id="applyLeaveModal">
+        <div class="modal-container modal-lg">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-paper-plane" style="color: var(--primary);"></i> BCA Student Leave Application</h3>
+                <button class="icon-btn" onclick="closeModal('applyLeaveModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="leaveAppForm" onsubmit="handleLeaveFormSubmit(event)">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <div class="flex items-center justify-between" style="background: var(--primary-light); padding: 0.65rem 1rem; border-radius: var(--radius-sm);">
+                                <span><strong style="color: var(--primary);">Application Leave ID:</strong></span>
+                                <input type="text" id="appLeaveID" readonly style="border: none; background: transparent; font-weight: 800; color: var(--primary); font-size: 1.1rem; text-align: right;" value="LV-BCA-2026-001">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Leave Type</label>
+                            <select class="form-control" id="appLeaveType" onchange="toggleMedicalUploadField()">
+                                <option value="Casual Leave">Casual Leave</option>
+                                <option value="Medical Leave">Medical Leave</option>
+                                <option value="Emergency Leave">Emergency Leave</option>
+                                <option value="Duty / Event Leave">Duty / Event Leave</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Student Full Name</label>
+                            <input type="text" class="form-control" id="appStudentName" placeholder="Enter Full Name (e.g. Rahul Sharma)">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">PRN Number</label>
+                            <input type="text" class="form-control" id="appPRN" placeholder="10322XXXXX">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Roll Number</label>
+                            <input type="text" class="form-control" id="appRollNo" placeholder="Roll No (e.g. 305)">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">BCA Year</label>
+                            <select class="form-control" id="appYear">
+                                <option value="FY BCA">FY BCA</option>
+                                <option value="SY BCA">SY BCA</option>
+                                <option value="TY BCA">TY BCA</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Division & Semester</label>
+                            <div class="flex gap-2">
+                                <select class="form-control" id="appDiv">
+                                    <option value="A">Div A</option>
+                                    <option value="B">Div B</option>
+                                    <option value="C">Div C</option>
+                                </select>
+                                <select class="form-control" id="appSem">
+                                    <option value="Sem 1">Sem 1</option>
+                                    <option value="Sem 2">Sem 2</option>
+                                    <option value="Sem 3">Sem 3</option>
+                                    <option value="Sem 4">Sem 4</option>
+                                    <option value="Sem 5">Sem 5</option>
+                                    <option value="Sem 6">Sem 6</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Student Email</label>
+                            <input type="email" class="form-control" id="appStudentEmail" placeholder="student@pccoer.org">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Student Mobile</label>
+                            <input type="tel" class="form-control" id="appStudentMobile" placeholder="e.g. 9823413003">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Parent Contact Number</label>
+                            <input type="tel" class="form-control" id="appParentContact" placeholder="e.g. 9923413003">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">From Date</label>
+                            <input type="date" class="form-control" id="appFromDate" onchange="calculateLeaveDays()">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">To Date</label>
+                            <input type="date" class="form-control" id="appToDate" onchange="calculateLeaveDays()">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <div class="flex items-center justify-between" style="background: var(--primary-light); padding: 0.65rem 1rem; border-radius: var(--radius-sm);">
+                                <span style="font-weight: 600; color: var(--primary);">Total Calculated Leave Days:</span>
+                                <span id="appDayCount" style="font-size: 1.15rem; font-weight: 800; color: var(--primary);">1 Day</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label class="form-label">Reason for Leave</label>
+                            <textarea class="form-control" id="appReason" rows="2" placeholder="State reason for absence..."></textarea>
+                        </div>
+
+                        <!-- Medical Certificate / Document Upload Box (Optional 50MB) -->
+                        <div class="form-group full-width" id="medicalUploadGroup">
+                            <label class="form-label" style="font-weight: 700; color: var(--text-main);">
+                                <i class="fa-solid fa-file-medical" style="color: var(--primary);"></i> Upload Medical Certificate / Supporting Document (Optional - PDF/JPG/PNG Max 50MB)
+                            </label>
+                            <div class="file-upload-box" onclick="document.getElementById('medicalFileSelect').click()" style="border: 2px dashed var(--primary); background: var(--bg-main); padding: 1.25rem; text-align: center; border-radius: var(--radius-md); cursor: pointer; transition: var(--transition);">
+                                <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; color: var(--primary); margin-bottom: 0.4rem;"></i>
+                                <div id="medicalFileName" style="font-weight: 700; color: var(--primary);">Click or Drag to Upload Certificate File (Optional)</div>
+                                <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">Formats: PDF, JPG, JPEG, PNG (Maximum File Size: 50 MB)</div>
+                                <div style="font-size: 0.75rem; color: var(--success); font-weight: 600; margin-top: 0.25rem;"><i class="fa-solid fa-circle-check"></i> Optional: Leave can be submitted with or without uploading document</div>
+                            </div>
+                            <input type="file" id="medicalFileSelect" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" onchange="handleFileUpload(this)">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('applyLeaveModal')">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="handleLeaveFormSubmit(event)"><i class="fa-solid fa-paper-plane"></i> Submit Leave</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MEDICAL VIEWER MODAL -->
+    <div class="modal-overlay" id="medicalViewerModal">
+        <div class="modal-container modal-lg">
+            <div class="modal-header">
+                <h3>Medical Certificate Inspection</h3>
+                <button class="icon-btn" onclick="closeModal('medicalViewerModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body text-center" id="medicalViewerContent"></div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('medicalViewerModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- REVIEW DECISION MODAL -->
+    <div class="modal-overlay" id="reviewModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="reviewModalTitle">Review Request</h3>
+                <button class="icon-btn" onclick="closeModal('reviewModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="reviewActionForm" onsubmit="handleReviewSubmit(event)">
+                <input type="hidden" id="reviewLeaveId">
+                <input type="hidden" id="reviewActionType">
+                <div class="modal-body">
+                    <div id="reviewDetailsSummary" style="background: var(--bg-main); padding: 0.85rem; border-radius: var(--radius-sm); margin-bottom: 0.85rem; font-size: 0.85rem;"></div>
+                    <div class="form-group">
+                        <label class="form-label">Reviewer Official Remarks *</label>
+                        <textarea class="form-control" id="reviewRemarks" rows="3" placeholder="Enter remarks or justification..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('reviewModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="reviewSubmitBtn">Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- OFFICIAL APPROVAL LETTER MODAL -->
+    <div class="modal-overlay" id="approvalLetterModal">
+        <div class="modal-container modal-lg">
+            <div class="modal-header no-print">
+                <h3>Official BCA Leave Approval Letter</h3>
+                <div class="flex gap-2">
+                    <button class="btn btn-primary btn-sm" onclick="window.print()"><i class="fa-solid fa-print"></i> Print / Save PDF</button>
+                    <button class="icon-btn" onclick="closeModal('approvalLetterModal')"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="printable-letter" id="approvalLetterContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STUDENT PROFILE EDIT MODAL -->
+    <div class="modal-overlay" id="editProfileModal">
+        <div class="modal-container modal-lg">
+            <div class="modal-header">
+                <h3>Edit BCA Student Profile</h3>
+                <button class="icon-btn" onclick="closeModal('editProfileModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="profileEditForm" onsubmit="handleProfileSave(event)">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="profName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Roll Number</label>
+                            <input type="text" class="form-control" id="profRoll" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="profEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mobile Number</label>
+                            <input type="tel" class="form-control" id="profMobile" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Parent Mobile</label>
+                            <input type="tel" class="form-control" id="profParentMobile" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Blood Group</label>
+                            <select class="form-control" id="profBlood">
+                                <option value="B+">B+</option>
+                                <option value="A+">A+</option>
+                                <option value="O+">O+</option>
+                                <option value="AB+">AB+</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-control" id="profAddress" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editProfileModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADMIN ADD FACULTY MODAL -->
+    <div class="modal-overlay" id="addUserModal">
+        <div class="modal-container modal-lg">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-chalkboard-user" style="color: var(--primary);"></i> Add New Faculty Counselor</h3>
+                <button class="icon-btn" onclick="closeModal('addUserModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="adminUserForm" onsubmit="handleAdminUserSubmit(event)">
+                <input type="hidden" id="admUserRole" value="faculty">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Faculty Full Name *</label>
+                            <input type="text" class="form-control" id="admUserName" placeholder="e.g. Prof. Anjali Deshmukh" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Faculty Employee ID *</label>
+                            <input type="text" class="form-control" id="admUserPrn" placeholder="e.g. FAC-BCA-105" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Official Email Address *</label>
+                            <input type="email" class="form-control" id="admUserEmail" placeholder="deshmukh.bca@pccoer.org" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mobile Number *</label>
+                            <input type="tel" class="form-control" id="admUserMobile" placeholder="10-digit mobile number" pattern="[0-9]{10}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Assigned BCA Counselor Class *</label>
+                            <select class="form-control" id="admUserYear" required>
+                                <option value="FY BCA">FY BCA Counselor</option>
+                                <option value="SY BCA">SY BCA Counselor</option>
+                                <option value="TY BCA">TY BCA Counselor</option>
+                                <option value="All BCA Years">All BCA Years</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Designation</label>
+                            <input type="text" class="form-control" id="admUserDesignation" placeholder="e.g. Assistant Professor" value="Assistant Professor">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addUserModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Save Faculty Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADMIN PROFILE & SECURITY SETTINGS MODAL -->
+    <div class="modal-overlay" id="adminProfileModal">
+        <div class="modal-container modal-lg">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-user-gear" style="color: var(--primary);"></i> Admin Security & Profile Settings</h3>
+                <button class="icon-btn" onclick="closeModal('adminProfileModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="adminProfileForm" onsubmit="handleAdminProfileUpdate(event)">
+                <div class="modal-body">
+                    <div class="badge badge-approved" style="margin-bottom: 1rem; width: 100%; justify-content: center; background: var(--primary-light); color: var(--primary);">
+                        <i class="fa-solid fa-shield-halved"></i> Verify current password to update username, email, or credentials
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label class="form-label" style="color: var(--danger); font-weight: 700;">Current Password (Required) *</label>
+                            <input type="password" class="form-control" id="admProfCurrentPassword" placeholder="Enter current admin password" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">New Username</label>
+                            <input type="text" class="form-control" id="admProfNewUsername" placeholder="e.g. admin_pccoer">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">New Email Address</label>
+                            <input type="email" class="form-control" id="admProfNewEmail" placeholder="admin@college.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="admProfNewPassword" placeholder="•••••••• (Leave blank to keep unchanged)">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control" id="admProfConfirmPassword" placeholder="••••••••">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('adminProfileModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Admin Settings</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADMIN FORGOT PASSWORD MODAL -->
+    <div class="modal-overlay" id="adminForgotModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-key" style="color: var(--primary);"></i> Admin Password Reset</h3>
+                <button class="icon-btn" onclick="closeModal('adminForgotModal')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <!-- Step 1: Request Reset Token -->
+                <form id="adminForgotStep1" onsubmit="handleAdminForgotStep1(event)">
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                        Enter your registered Admin Email Address to generate a secure password reset token.
+                    </p>
+                    <div class="form-group">
+                        <label class="form-label">Admin Email Address</label>
+                        <input type="email" class="form-control" id="admForgotEmail" placeholder="admin@college.com" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Generate Reset Token</button>
+                </form>
+
+                <!-- Step 2: Reset Password with Token -->
+                <form id="adminForgotStep2" onsubmit="handleAdminForgotStep2(event)" style="display: none; margin-top: 1rem;">
+                    <div class="badge badge-approved" style="margin-bottom: 0.75rem; background: #e0f2fe; color: #0284c7; width: 100%; justify-content: center;">
+                        <i class="fa-solid fa-circle-check"></i> Token Issued! Enter token below to set new password.
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Reset Token</label>
+                        <input type="text" class="form-control" id="admForgotToken" placeholder="Paste 32-character token" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">New Password</label>
+                        <input type="password" class="form-control" id="admForgotNewPassword" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn btn-success" style="width: 100%;">Reset Admin Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="notif-drawer" id="notifDrawer">
+        <div class="notif-header">
+            <h3><i class="fa-solid fa-bell" style="color: var(--primary);"></i> BCA Notifications</h3>
+            <button class="icon-btn" onclick="toggleNotificationsDrawer()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="notif-list" id="notifList"></div>
+        <div style="padding: 0.65rem; text-align: center; border-top: 1px solid var(--border-color);">
+            <button class="btn btn-secondary btn-sm" onclick="clearAllNotifications()" style="width: 100%;">Clear All</button>
+        </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container footer-grid">
+            <div>
+                <h3 style="color: var(--primary); margin-bottom: 0.5rem;">PCCOER RAVET</h3>
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                    Pimpri Chinchwad College of Engineering & Research (PCCOER)<br>
+                    Department of Computer Applications (BCA)
+                </p>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">
+                    Sector 26, Pradhikaran, Ravet, Pune 412101<br>
+                    <strong>Helpdesk:</strong> 8108181099 | 9923413003
+                </div>
+            </div>
+
+            <div>
+                <h4 style="margin-bottom: 0.75rem;">BCA Academics</h4>
+                <ul class="flex flex-col gap-1" style="list-style: none; font-size: 0.82rem;">
+                    <li><a href="#bca-dept">FY BCA (Sem 1 & 2)</a></li>
+                    <li><a href="#bca-dept">SY BCA (Sem 3 & 4)</a></li>
+                    <li><a href="#bca-dept">TY BCA (Sem 5 & 6)</a></li>
+                    <li><a href="#workflow">Leave Process</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 style="margin-bottom: 0.75rem;">Portals</h4>
+                <ul class="flex flex-col gap-1" style="list-style: none; font-size: 0.82rem;">
+                    <li><a href="#" onclick="switchRole('student')">Student Portal</a></li>
+                    <li><a href="#" onclick="switchRole('faculty')">Faculty Portal</a></li>
+                    <li><a href="#" onclick="switchRole('admin')">Admin Portal</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 style="margin-bottom: 0.75rem;">Accreditation</h4>
+                <p style="font-size: 0.78rem; color: var(--text-muted);">
+                    NAAC A++ Accredited &bull; NBA Accredited &bull; ISO 21001:2018 Certified &bull; Affiliated to SPPU Pune &bull; DTE Code 6822
+                </p>
+            </div>
+        </div>
+
+        <div class="footer-bottom container">
+            &copy; 2026 Pimpri Chinchwad Education Trust's PCCOER Ravet - Department of BCA. All Rights Reserved.
+        </div>
+    </footer>
+
+    <!-- Custom JavaScript Engine -->
+    <script src="js/app.js"></script>
+</body>
+</html>

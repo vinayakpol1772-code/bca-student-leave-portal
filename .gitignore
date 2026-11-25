@@ -1,0 +1,23 @@
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.env
+
+# Editor & IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Operating System files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Logs
+*.log
